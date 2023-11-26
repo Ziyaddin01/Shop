@@ -1,11 +1,15 @@
 ﻿<h1>Bütun maşinlar</h1>
 <h3>@Model.currCategory</h3>
- @{
+<div class="row mt-5 mb-2">
+@{
     foreach(var car in Model.allCars)
      {
-          <div>
-              <h2>Model: @car.name</h2>
-              <p>Qiymət: @car.price.ToString("c")</p>
+          <div class="col-lg-4">
+          <img class="img-thumbnail" src="@car.img" alt="@car.name" />   
+          <h2>@car.name</h2>
+            <p>Qiyməti: @car.price.ToString("c")</p>
+            <p><a class="btn btn-warning" href="#">Daha ətraflı</a></p>
            </div>
      }
  }
+</div> 
