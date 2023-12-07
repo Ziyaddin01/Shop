@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shop.Data.interfaces;
+using Shop.Data.Models;
 using Shop.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -18,14 +19,41 @@ namespace Shop.Controllers
             _allCars = iAllCars;
             _allCategories = iCarsCat;
         }
-        public ViewResult List()
-        {
-            ViewBag.Title = "avtomobil səhifasi";
-            CarsListViewModel obj = new CarsListViewModel();
-            obj.allCars = _allCars.Cars;
-            obj.currCategory = "Maşinlar";
 
-            return View(obj);
+        [Route("Cars/List")]
+        [Route("Cars/List/{category}")]
+        public ViewResult List(string category)
+        {
+            string _category = category;
+            IEnumerable<Car> cars = null;
+            string currCategory = "";
+            if(string .IsNullOrEmpty(category))
+            {
+                cars = _allCars.Cars.OrderBy(i => i.id);
+            }else
+            {
+                if (string.Equals("electro", category, StringComparison.OrdinalIgnoreCase))
+                {
+                    cars = _allCars.Cars.Where(i => i.Category.categoryName.Equals("Elektrikli Avtomobil")).OrderBy(i => i.id);
+                    currCategory = "Elektrikli Avtomobil";
+                }
+                else {
+                    cars = _allCars.Cars.Where(i => i.Category.categoryName.Equals("Klassik Avtomobil")).OrderBy(i => i.id);
+                    currCategory = "Klassik Avtomobil";
+                }
+            
+            }
+            var carObj = new CarsListViewModel
+                {
+                    allCars = cars,
+                    currCategory = currCategory
+                };
+            
+            ViewBag.Title = "avtomobil səhifasi";
+            
+            
+
+            return View(carObj);
         }
     }
 }
